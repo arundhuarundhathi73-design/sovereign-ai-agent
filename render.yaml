@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: sovereign-ai-agent
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    plan: free
+    region: oregon
+    envVars:
+      - key: WALLET_PROVIDER
+        value: stripe
+      - key: WALLET_CURRENCY
+        value: USD
+      - key: LOW_BALANCE_THRESHOLD
+        value: "10.0"
+      - key: SHUTDOWN_BALANCE_THRESHOLD
+        value: "2.0"
+      - key: DAILY_BUDGET
+        value: "100.0"
+      - key: MIN_NET_PROFIT
+        value: "500.0"
+      - key: CHILD_SEED_FUNDING
+        value: "50.0"
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: agent-db
+          property: connectionString
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: STRIPE_API_KEY
+        sync: false
+
+  - type: pserv
+    name: agent-db
+    ipWhitelist: []
+    plan: free
+    postgresVersion: 15
