@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  sovereign-agent:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      WALLET_PROVIDER: mock
+      WALLET_CURRENCY: USD
+      LOW_BALANCE_THRESHOLD: 10.0
+      SHUTDOWN_BALANCE_THRESHOLD: 2.0
+      DAILY_BUDGET: 100.0
+      MIN_NET_PROFIT: 500.0
+      CHILD_SEED_FUNDING: 50.0
+    volumes:
+      - .:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
